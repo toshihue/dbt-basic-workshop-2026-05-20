@@ -1,0 +1,13 @@
+models:
+  - name: customers
+    description: クレンジング済み顧客テーブル
+    columns:
+      - name: customer_id
+        tests:
+          - unique
+          - not_null
+      - name: first_name
+      - name: last_name
+      - name: first_order_date
+      - name: most_recent_order_date
+      - name: number_of_orders

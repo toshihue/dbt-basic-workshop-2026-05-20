@@ -1,6 +1,17 @@
 name: Open PRs from feature branches
 
-# Lists all remote feature/* branches and opens a PR to the default branch when missing.
+# Lists remote branches matching feature/* and opens a PR into the default branch when:
+#   - the branch has commits not on the default branch, and
+#   - there is no open PR with the same head → base.
+#
+# If `gh pr create` fails with:
+#   GitHub Actions is not permitted to create or approve pull requests
+# enable repo Settings → Actions → General → Workflow permissions →
+# "Allow GitHub Actions to create and approve pull requests"
+# (organization policy may require an org admin to allow this).
+#
+# This workflow uses GITHUB_TOKEN only. To use a PAT instead, set env GH_TOKEN from
+# a repository secret (e.g. secrets.MY_PAT) and grant that token repo/PR access.
 on:
   workflow_dispatch:
 
@@ -38,7 +49,7 @@ jobs:
             [ -n "$branch" ] || continue
             ref="origin/${branch}"
 
-            # Skip if there is nothing to merge (avoids empty PRs)
+            # Skip if there are no commits on this branch that are not on the default branch (avoids empty PRs)
             ahead=$(git rev-list --count "origin/${DEFAULT_BRANCH}..$ref" 2>/dev/null || echo 0)
             if [ "$ahead" -eq 0 ]; then
               echo "Skip $branch: no commits ahead of ${DEFAULT_BRANCH}"
