@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: calendar_source
+    database: VA550_DEV
+    schema: RAW
+    tables:
+      - name: raw_sa0100_csv
+        description: "店別営業日マスタCSV"
